@@ -101,7 +101,7 @@ const UploadApp = () => {
       const formData = new FormData();
       formData.append('video', file);
 
-      const response = await fetch('http://localhost:3000/api/upload', {
+      const response = await fetch('/api/upload', {
         method: 'POST',
         body: formData,
       });
@@ -126,7 +126,7 @@ const UploadApp = () => {
     setError(null);
 
     try {
-      const response = await fetch('http://localhost:3000/api/generate-captions', {
+      const response = await fetch('/api/generate-captions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ videoPath: video.url, method }),
@@ -152,7 +152,7 @@ const UploadApp = () => {
           const durationInFrames = Math.ceil(maxEndTime * 30);
           
           const props = {
-            videoSrc: `http://localhost:3000${video.url}`,
+            videoSrc: `${window.location.origin}${video.url}`,
             captions: result.captions,
             preset: CAPTION_PRESETS[selectedPreset]
           };
@@ -162,7 +162,7 @@ const UploadApp = () => {
           localStorage.setItem('remotionDuration', durationInFrames.toString());
           
           // Auto-open Remotion Studio
-          window.open('http://localhost:3001', '_blank');
+          window.open('/studio', '_blank');
           
           // Update success message
           setError('🎥 Remotion Studio opened! Your video and captions are ready for editing.');
@@ -186,7 +186,7 @@ const UploadApp = () => {
       const durationInFrames = Math.ceil(maxEndTime * 30); // 30 fps
       
       const props = {
-        videoSrc: `http://localhost:3000${video.url}`,
+        videoSrc: `${window.location.origin}${video.url}`,
         captions,
         preset: CAPTION_PRESETS[selectedPreset]
       };
@@ -196,7 +196,7 @@ const UploadApp = () => {
       localStorage.setItem('remotionDuration', durationInFrames.toString());
       
       // Open Remotion Studio
-      const studioUrl = `http://localhost:3001`;
+      const studioUrl = `/studio`;
       window.open(studioUrl, '_blank');
       
       // Also show a success message
@@ -211,7 +211,7 @@ const UploadApp = () => {
     const durationInFrames = Math.ceil(maxEndTime * 30);
     
     const props = {
-      videoSrc: `http://localhost:3000${video.url}`,
+      videoSrc: `${window.location.origin}${video.url}`,
       captions,
       preset: CAPTION_PRESETS[selectedPreset]
     };
@@ -233,8 +233,23 @@ const UploadApp = () => {
           className: 'text-4xl font-bold text-slate-800 mb-2'
         }, 'Remotion Video Captioning'),
         React.createElement('p', {
-          className: 'text-slate-600'
-        }, 'Upload a video, generate captions, and preview with different styles')
+          className: 'text-slate-600 mb-4'
+        }, 'Upload a video, generate captions, and preview with different styles'),
+        React.createElement('div', {
+          className: 'flex justify-center space-x-4'
+        },
+          React.createElement(Button, {
+            onClick: () => window.open('/studio', '_blank'),
+            variant: 'outline',
+            className: 'bg-orange-50 border-orange-200 text-orange-700 hover:bg-orange-100'
+          }, '🎬 Open Remotion Studio'),
+          React.createElement('a', {
+            href: 'https://github.com/remotion-dev/remotion',
+            target: '_blank',
+            rel: 'noopener noreferrer',
+            className: 'inline-flex items-center px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-800 transition-colors'
+          }, '📚 Remotion Docs')
+        )
       ),
 
       // Error Alert
@@ -298,16 +313,22 @@ const UploadApp = () => {
                   className: 'mt-2 space-y-1 text-xs'
                 },
                   React.createElement('li', null, '• Demo: Free sample captions with Hinglish text'),
-                  React.createElement('li', null, '• Gemini: Real transcription (requires API key)'),
+                  React.createElement('li', null, '• Whisper.cpp: Local transcription (no API required)'),
+                  React.createElement('li', null, '• Gemini: Cloud transcription (requires API key)'),
                   React.createElement('li', null, '• Web Speech: Browser-based (Chrome/Edge only)')
                 )
               ),
-              
               React.createElement(Button, {
                 onClick: () => handleGenerateCaptions('demo'),
                 disabled: !video || isGeneratingCaptions,
                 className: 'w-full bg-green-600 hover:bg-green-700'
-              }, isGeneratingCaptions ? 'Generating...' : '🎬 Generate Demo Captions (Free)'),
+              }, isGeneratingCaptions ? 'Generating...' : '🎦 Generate Demo Captions (Free)'),
+              
+              React.createElement(Button, {
+                onClick: () => handleGenerateCaptions('whisper'),
+                disabled: !video || isGeneratingCaptions,
+                className: 'w-full bg-orange-600 hover:bg-orange-700'
+              }, isGeneratingCaptions ? 'Generating...' : '🎙️ Local Whisper.cpp (No API Required)'),
               
               React.createElement(Button, {
                 onClick: () => handleGenerateCaptions('gemini'),
@@ -349,7 +370,7 @@ const UploadApp = () => {
               className: 'aspect-video bg-black rounded-lg overflow-hidden mb-4'
             },
               React.createElement('video', {
-                src: `http://localhost:3000${video.url}`,
+                src: `${window.location.origin}${video.url}`,
                 controls: true,
                 className: 'w-full h-full object-contain'
               })

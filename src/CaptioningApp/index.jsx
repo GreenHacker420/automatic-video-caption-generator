@@ -184,17 +184,25 @@ export const CaptioningApp = () => {
                   <strong>Caption Generation Options:</strong>
                   <ul className="mt-2 space-y-1 text-xs">
                     <li>• <strong>Demo:</strong> Free sample captions with Hinglish text</li>
-                    <li>• <strong>Gemini:</strong> Real transcription (requires API key)</li>
+                    <li>• <strong>Whisper.cpp:</strong> Local transcription (no API required)</li>
+                    <li>• <strong>Gemini:</strong> Cloud transcription (requires API key)</li>
                     <li>• <strong>Web Speech:</strong> Browser-based (Chrome/Edge only)</li>
                   </ul>
                 </div>
-                
                 <button
                   onClick={() => handleGenerateCaptions('demo')}
                   disabled={!video || isGeneratingCaptions}
                   className="w-full bg-green-500 hover:bg-green-600 disabled:bg-gray-300 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
                 >
-                  {isGeneratingCaptions ? 'Generating...' : '🎬 Generate Demo Captions (Free)'}
+                  {isGeneratingCaptions ? 'Generating...' : '🎦 Generate Demo Captions (Free)'}
+                </button>
+                
+                <button
+                  onClick={() => handleGenerateCaptions('whisper')}
+                  disabled={!video || isGeneratingCaptions}
+                  className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+                >
+                  {isGeneratingCaptions ? 'Generating...' : '🎙️ Local Whisper.cpp (No API Required)'}
                 </button>
                 
                 <button
