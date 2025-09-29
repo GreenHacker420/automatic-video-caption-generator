@@ -1,1 +1,12 @@
-@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Sans:wght@400;600;700&display=swap');
+
+body {
+	font-family: 'Noto Sans', Arial, Helvetica, sans-serif;
+}
+
+/* Ensure proper font rendering for Hinglish text */
+.hinglish-text {
+	font-family: 'Noto Sans Devanagari', 'Noto Sans', sans-serif;
+	font-feature-settings: 'liga' 1, 'calt' 1;
+	text-rendering: optimizeLegibility;
+}
